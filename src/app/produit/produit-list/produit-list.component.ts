@@ -1,24 +1,60 @@
-import { Component, OnInit } from '@angular/core';
-import { ProduitService } from '../service/produit.service';
-import { Produit } from '../model/produit'; // <-- importe Produit
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { ProduitState } from '../ngrx/produit.reducer';
+import { loadProduits } from '../ngrx/produit.actions';
+import { PLATFORM_ID } from '@angular/core';
+import { selectAllProduits } from '../ngrx/produit.selectors';
 
 @Component({
   selector: 'app-produit-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   templateUrl: './produit-list.component.html',
   styleUrls: ['./produit-list.component.css']
 })
-export class ProduitListComponent implements OnInit {
-  produits: Produit[] = []; // <-- utilise Produit ici
+export class ProduitListComponent implements OnInit, OnDestroy {
+  produits$!: Observable<any[]>;
+  currentStart = 0;
+  readonly limit = 20;
+  loading = false;
 
-  constructor(private produitService: ProduitService) {}
+  constructor(
+    private store: Store<ProduitState>,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
-    this.produitService.getProduits().subscribe(data => {
-      this.produits = data;
-    });
+    this.produits$ = this.store.select(selectAllProduits);
+    this.loadNextPage();
+
+    if (isPlatformBrowser(this.platformId)) {
+      window.addEventListener('scroll', this.onScroll, true);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('scroll', this.onScroll, true);
+    }
+  }
+
+  onScroll = (): void => {
+    const bottomReached =
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+    if (bottomReached && !this.loading) {
+      this.loadNextPage();
+    }
+  };
+
+  private loadNextPage(): void {
+    this.loading = true;
+    this.store.dispatch(loadProduits({ start: this.currentStart, limit: this.limit }));
+    this.currentStart += this.limit;
+
+    // simuler fin de chargement après un court délai
+    setTimeout(() => (this.loading = false), 300);
   }
 }

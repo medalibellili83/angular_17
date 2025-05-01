@@ -26,7 +26,7 @@ node node generate-db.js
 
 # kill le port 3000 car il est déja run lors de tester angular without ngrx
 
-# run la fichier db.json le json api server dans un line de command
+# run la fichier db1.json le json api server dans un line de command
 json-server --watch db1.json --port 3000
 
 # run le projet angular 17 

@@ -6,6 +6,7 @@ import { ProduitState } from '../ngrx/produit.reducer';
 import { loadProduits } from '../ngrx/produit.actions';
 import { PLATFORM_ID } from '@angular/core';
 import { selectAllProduits } from '../ngrx/produit.selectors';
+import { Produit } from '../model/produit';
 
 @Component({
   selector: 'app-produit-list',
@@ -15,7 +16,7 @@ import { selectAllProduits } from '../ngrx/produit.selectors';
   styleUrls: ['./produit-list.component.css']
 })
 export class ProduitListComponent implements OnInit, OnDestroy {
-  produits$!: Observable<any[]>;
+  produits$!: Observable<Produit[]>;
   currentStart = 0;
   readonly limit = 20;
   loading = false;

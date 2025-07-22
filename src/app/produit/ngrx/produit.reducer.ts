@@ -1,3 +1,5 @@
+//modifient l’état
+
 import { createReducer, on } from '@ngrx/store';
 import * as ProduitActions from './produit.actions';
 import { Produit } from '../model/produit';

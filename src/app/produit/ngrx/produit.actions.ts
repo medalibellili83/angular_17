@@ -1,3 +1,5 @@
+//elles représentent les événements
+
 import { createAction, props } from '@ngrx/store';
 import { Produit } from '../model/produit';
 

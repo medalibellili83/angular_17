@@ -1,3 +1,5 @@
+//gèrent les appels asynchrones
+
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ProduitService } from '../service/produit.service';

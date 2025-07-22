@@ -1,3 +1,5 @@
+//lisent l’état
+
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ProduitState, produitFeatureKey } from './produit.reducer';
 
